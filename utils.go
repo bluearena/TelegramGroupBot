@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"bytes"
 	"encoding/json"
+	"math/rand"
+	"fmt"
 )
 
 func int64ToString(i int64) string {
@@ -90,4 +92,21 @@ func writeJson(obj interface{}, filename string) {
 		log.Print(err)
 	}
 	ioutil.WriteFile(filename, dataJson, 0644)
+}
+
+func getWelcomeMessage(name string) string {
+	index := rand.Intn(5)
+	return fmt.Sprintf(phrases.Welcomes[index], name)
+}
+
+func getWarningNameMessage(name string) string{
+	return fmt.Sprintf(phrases.WarningName, name)
+}
+
+func getWarningWordsMessage(name string) string{
+	return fmt.Sprintf(phrases.WarningWords, name)
+}
+
+func getUserBannedMessage(name string) string{
+	return fmt.Sprintf(phrases.UserBanned, name)
 }

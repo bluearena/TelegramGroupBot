@@ -15,11 +15,12 @@ func handleMessage(message *tgbotapi.Message){
 
 func handleNewMembers(newMembers *[]tgbotapi.User){
 	for _, member := range *newMembers{
-		sendMessage(config.GroupId, "Welcome, " + member.FirstName, nil)
+		sendMessage(config.GroupId, getWelcomeMessage(member.FirstName), nil)
 	}
 }
 
 func handleText(message *tgbotapi.Message){
+	checkUsername(message)
 	if message.Entities != nil{
 		if isDeleted := handleEntities(message); isDeleted {
 			return
@@ -42,6 +43,14 @@ func handleWords(message *tgbotapi.Message){
 	for _, word := range config.BannedWords{
 		if strings.Contains(message.Text, word){
 			handleViolation(message)
+		}
+	}
+}
+
+func checkUsername(message *tgbotapi.Message){
+	for _, word := range config.BannedNames{
+		if strings.Contains(message.From.FirstName + " " + message.From.LastName, word){
+			handleWrongName(message)
 		}
 	}
 }

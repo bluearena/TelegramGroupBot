@@ -1,35 +1,53 @@
 package main
 
-func getUserViolations(userId int) *UserViolations {
-	var uv *UserViolations
-	db.Find(uv, "id = ?", userId)
-	return uv
+import "time"
+
+func getUser(userId int) *User {
+	var u *User
+	db.Find(u, "id = ?", userId)
+	return u
 }
 
 func insertUser(userId int){
-	uv := UserViolations{userId, 0, false}
-	db.Create(&uv)
+	u := User{userId, 0, time.Time{},false}
+	db.Create(&u)
 }
 
 func getViolationCount(userId int) int{
-	uv := getUserViolations(userId)
-	if uv == nil{
+	u := getUser(userId)
+	if u == nil{
 		insertUser(userId)
 		return 0
 	}
-	return uv.Violations
+	return u.Violations
 }
 
 func incrementViolationCount(userId int){
-	var uv *UserViolations
-	db.Find(uv, "id = ?", userId)
-	uv.Violations++
-	db.Save(uv)
+	var u *User
+	db.Find(u, "id = ?", userId)
+	u.Violations++
+	db.Save(u)
 }
 
 func setIsBanned(userId int){
-	var uv *UserViolations
-	db.Find(uv, "id = ?", userId)
-	uv.IsBanned = true
-	db.Save(uv)
+	var u *User
+	db.Find(u, "id = ?", userId)
+	u.IsBanned = true
+	db.Save(u)
+}
+
+func getTimeToCheckName(userId int) time.Time{
+	u := getUser(userId)
+	if u == nil{
+		insertUser(userId)
+		return time.Time{}
+	}
+	return u.TimeToCheckName
+}
+
+func setTimeToCheckName(userId int){
+	var u *User
+	db.Find(u, "id = ?", userId)
+	u.TimeToCheckName = time.Now().Add(72 * time.Hour)
+	db.Save(u)
 }

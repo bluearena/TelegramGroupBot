@@ -13,7 +13,7 @@ var (
 	bot                *tgbotapi.BotAPI
 	config             Configuration
 	db                 *gorm.DB
-	phrases            map[int]string
+	phrases            Phrases
 )
 
 func main() {
@@ -76,6 +76,6 @@ func initDB() {
 	}
 	db.LogMode(true)
 	log.Print("Set LogMode")
-	db.AutoMigrate(&UserViolations{})
+	db.AutoMigrate(&User{})
 	log.Print("Migrated")
 }
