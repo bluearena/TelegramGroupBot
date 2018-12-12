@@ -1,19 +1,19 @@
 package main
 
 import (
-	"log"
-	"os"
-	"io"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"io"
+	"log"
+	"os"
 )
 
 var (
-	bot                *tgbotapi.BotAPI
-	config             Configuration
-	db                 *gorm.DB
-	phrases            Phrases
+	bot     *tgbotapi.BotAPI
+	config  Configuration
+	db      *gorm.DB
+	phrases Phrases
 )
 
 func main() {
@@ -38,7 +38,8 @@ func main() {
 	updates, err := bot.GetUpdatesChan(u)
 
 	for update := range updates {
-		if update.Message != nil{
+		if update.Message != nil {
+			log.Print(update.Message)
 			handleMessage(update.Message)
 		}
 	}
